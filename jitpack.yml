@@ -1,4 +1,10 @@
 jdk:
-  - openjdk11
-before_install:
-  - ./scripts/prepareJitpackEnvironment.sh
+  - openjdk17
+
+build:
+  scripts:
+    - ./gradlew clean build
+
+publish:
+  artifacts:
+    - build/libs/*.jar
