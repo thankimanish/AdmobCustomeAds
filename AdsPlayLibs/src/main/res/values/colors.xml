@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+     <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="colors">#41476C</color>
+    <color name="transparent">#00000000</color>
+    <color name="colorPrimary">#000000</color>
+    <color name="shimmerColor">#C2C2C2</color>
+    <color name="gnt_white">#FFFFFF</color>
+    <color name="gnt_blue">#4285f4</color>
+    <color name="gnt_blue_dark">#0066DC</color>
+    <color name="gnt_ad_green">#3A6728</color>
+    <color name="gnt_gray">#808080</color>
+    <color name="gnt_ad_green_bg">#883A6728</color>
+</resources>

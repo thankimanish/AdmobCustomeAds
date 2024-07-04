@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">AdmobCustomeAds</string>
+    <string name="admob_app_id">ca-app-pub-3940256099942544~3347511713</string>
+    <string name="internet_connection" translatable="false">Internet connection</string>
+    <string name="internet_connection_not_established" translatable="false">Internet connection not established. Do you want to connect?</string>
+    <string name="internet_connection_not_established_no" translatable="false">Internet connection not established. For the use of this app, please connect with your Wi-Fi or mobile data</string>
+
+
+</resources>

@@ -1,0 +1,51 @@
+<resources>
+
+    <dimen name="material_grid_margin">16dp</dimen>
+    <dimen name="material_grid_unit">8dp</dimen>
+
+    <dimen name="material_grid_small_icon">24dp</dimen>
+    <dimen name="material_grid_small_icon_sdp">@dimen/_24sdp</dimen>
+
+    <dimen name="material_grid_touch_small">36dp</dimen>
+    <dimen name="material_grid_touch_medium">48dp</dimen>
+    <dimen name="material_grid_touch_large">56dp</dimen>
+
+    <dimen name="dialog_max_size">350dp</dimen>
+    <dimen name="dialog_padding">24dp</dimen>
+
+    <dimen name="navigation_drawer_max_width">300dp</dimen>
+
+    <dimen name="navigation_drawer_minimum_space">56dp</dimen>
+
+    <dimen name="desktop_tab_width">175dp</dimen>
+    <dimen name="desktop_tab_height">30dp</dimen>
+
+    <dimen name="progress_bar_height">2dp</dimen>
+
+    <dimen name="icon_dimen">@dimen/_20sdp</dimen>
+
+    <dimen name="banner_height">@dimen/_50sdp</dimen>
+
+    <item name="gnt_text_row_weight" format="float" type="dimen">0.25</item>
+    <dimen name="gnt_default_margin">@dimen/_10sdp</dimen>
+    <dimen name="gnt_small_margin">@dimen/_5sdp</dimen>
+    <dimen name="gnt_text_size_small">12sp</dimen>
+    <dimen name="gnt_text_size_large">15sp</dimen>
+    <dimen name="gnt_ad_indicator_width">@dimen/_25sdp</dimen>
+    <dimen name="gnt_ad_indicator_text_size">10sp</dimen>
+    <dimen name="gnt_no_margin">0dp</dimen>
+    <dimen name="gnt_no_size">0dp</dimen>
+    <dimen name="corner_radius">@dimen/_15sdp</dimen>
+
+    <dimen name="txt_size_large">20sp</dimen>
+    <dimen name="item_txt_size">16sp</dimen>
+    <dimen name="paste_txt_size">14sp</dimen>
+    <dimen name="download_txt_size">14sp</dimen>
+    <dimen name="gnt_text_size_verysmall">10sp</dimen>
+    <!--<dimen name="actionbarsize">?android:attr/actionBarSize</dimen>-->
+    <dimen name="actionbarsize_padding">@dimen/_6sdp</dimen>
+    <dimen name="actionbarsize">@dimen/_48sdp</dimen>
+
+    <!--<dimen name="design_navigation_icon_size" tools:override="true">24dp</dimen>-->
+</resources>
+
