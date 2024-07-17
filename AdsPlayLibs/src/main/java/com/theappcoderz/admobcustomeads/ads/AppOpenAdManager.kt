@@ -67,7 +67,7 @@ class AppOpenAdManager(instance: AdsApplication?) {
     fun showAdIfAvailable(activity: Activity) {
         showAdIfAvailable(activity, object : AdsApplication.OnShowAdCompleteListener {
             override fun onShowAdComplete() {
-                AdsApplication.myloadTime = Date().time
+                //AdsApplication.myloadTime = Date().time
             }
 
             override fun onShowAdFailed() {

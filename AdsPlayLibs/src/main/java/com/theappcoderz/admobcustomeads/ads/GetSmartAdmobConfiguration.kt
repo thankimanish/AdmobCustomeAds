@@ -121,8 +121,7 @@ class GetSmartAdmobConfiguration(
     private fun onPostExecute(success: Boolean) {
         AdsApplication.appOpenAdManager = AppOpenAdManager(AdsApplication.getInstance())
         createTimer(AppConstant.COUNTER_TIME)
-        googleMobileAdsConsentManager =
-            GoogleMobileAdsConsentManager.getInstance(activity)
+        googleMobileAdsConsentManager = GoogleMobileAdsConsentManager.getInstance(activity)
         googleMobileAdsConsentManager.gatherConsent(activity) {
             if (googleMobileAdsConsentManager.canRequestAds) {
                 L.e("")
@@ -160,9 +159,18 @@ class GetSmartAdmobConfiguration(
         if (isMobileAdsInitializeCalled.getAndSet(true)) {
             return
         }
+        CoroutineScope(Dispatchers.IO).launch {
+            // Initialize the Google Mobile Ads SDK on a background thread.
+            MobileAds.initialize(activity) {}
+            activity.runOnUiThread {
+                // Load an ad on the main thread.
+                (activity.application as AdsApplication).loadAd(activity)
+            }
+        }
+
         // Load an ad.
         L.e("")
-        (activity.application as AdsApplication).loadAd(activity)
+
     }
 
     fun adshowafterconsent() {

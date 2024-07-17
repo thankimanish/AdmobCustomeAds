@@ -4,29 +4,30 @@ import android.app.Activity
 import android.app.Application
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
+import androidx.multidex.MultiDexApplication
 import com.google.android.gms.ads.MobileAds
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.theappcoderz.admobcustomeads.ads.Adp
-import com.theappcoderz.admobcustomeads.ads.AdsConfiguration
 import com.theappcoderz.admobcustomeads.ads.ApiUtils
 import com.theappcoderz.admobcustomeads.ads.AppConstant
 import com.theappcoderz.admobcustomeads.ads.AppOpenAdManager
 import com.theappcoderz.admobcustomeads.ads.InterstitialAdAdapter
 import org.json.JSONObject
-import java.util.Date
 
-open class AdsApplication(private val applicationId: String) : Application() , Application.ActivityLifecycleCallbacks,
-    LifecycleObserver {
+open class AdsApplication(private val applicationId: String) : MultiDexApplication(),
+    Application.ActivityLifecycleCallbacks,
+    DefaultLifecycleObserver {
     private var currentActivity: Activity? = null
     override fun onCreate() {
-        super.onCreate()
+        super<MultiDexApplication>.onCreate()
+        registerActivityLifecycleCallbacks(this)
+        ProcessLifecycleOwner.get().lifecycle.addObserver(this)
         AndroidThreeTen.init(applicationContext)
         instance = this
-        prefs = Prefs(this,applicationId)
+        prefs = Prefs(this, applicationId)
         if (prefs!!.contains(AppConstant.JSONRESPONSE)) {
             try {
                 val jo = JSONObject(prefs!!.getString(AppConstant.JSONRESPONSE, "").toString())
@@ -39,27 +40,13 @@ open class AdsApplication(private val applicationId: String) : Application() , A
         MobileAds.initialize(this)
         appOpenAdManager = AppOpenAdManager(getInstance())
         intInterstitialAdAdapter = InterstitialAdAdapter()
-        registerActivityLifecycleCallbacks(this@AdsApplication)
-        ProcessLifecycleOwner.get().lifecycle.addObserver(this@AdsApplication)
-    }
-    private fun wasLoadTimeLessThanNHoursAgo(numHours: Double): Boolean {
-        if (myloadTime == 0L) {
-            return true
-        }
-        val dateDifference: Long = Date().time - myloadTime
-        val numMilliSecondsPerHour: Long = 3600000
-        var timsp = numMilliSecondsPerHour * numHours
-        return dateDifference > timsp
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_START)
-    fun onMoveToForeground() {
-        if (wasLoadTimeLessThanNHoursAgo(0.01)
-            && AdsConfiguration.first_opened_enable == 1
-        ) {
-            currentActivity?.let {
-                appOpenAdManager.showAdIfAvailable(it)
-            }
+    override fun onStart(owner: LifecycleOwner) {
+        super.onStart(owner)
+        currentActivity?.let {
+            // Show the ad (if available) when the app moves to foreground.
+            appOpenAdManager.showAdIfAvailable(it)
         }
     }
 
@@ -122,8 +109,8 @@ open class AdsApplication(private val applicationId: String) : Application() , A
 
         fun onShowAdFailed()
     }
+
     companion object {
-        var myloadTime: Long = 0
         lateinit var appOpenAdManager: AppOpenAdManager
         var intInterstitialAdAdapter: InterstitialAdAdapter? = null
         const val TAG = "AdsApplication"
@@ -137,6 +124,7 @@ open class AdsApplication(private val applicationId: String) : Application() , A
         init {
             AppCompatDelegate.setCompatVectorFromResourcesEnabled(false)
         }
+
         var prefs: Prefs? = null
         var packages = Adp.createDefault()
     }
