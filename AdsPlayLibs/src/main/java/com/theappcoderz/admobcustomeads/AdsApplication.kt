@@ -20,6 +20,7 @@ import org.json.JSONObject
 open class AdsApplication(private val applicationId: String) : MultiDexApplication(),
     Application.ActivityLifecycleCallbacks,
     DefaultLifecycleObserver {
+    private lateinit var appOpenAdManager: AppOpenAdManager
     private var currentActivity: Activity? = null
     override fun onCreate() {
         super<MultiDexApplication>.onCreate()
@@ -111,7 +112,7 @@ open class AdsApplication(private val applicationId: String) : MultiDexApplicati
     }
 
     companion object {
-        lateinit var appOpenAdManager: AppOpenAdManager
+
         var intInterstitialAdAdapter: InterstitialAdAdapter? = null
         const val TAG = "AdsApplication"
         private var instance: AdsApplication? = null

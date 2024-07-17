@@ -46,7 +46,7 @@ class SplashActivity : AppCompatActivity(), OnCallApiResponce {
             AdsApplication.packages,
             object : GetSmartAdmobConfiguration.SmartListener {
                 override fun onFinish(success: Boolean) {
-                    /*Handler(Looper.getMainLooper()).postDelayed({
+                    Handler(Looper.getMainLooper()).postDelayed({
                         startActivity(
                             Intent(
                                 this@SplashActivity,
@@ -54,7 +54,7 @@ class SplashActivity : AppCompatActivity(), OnCallApiResponce {
                             )
                         )
                         finish()
-                    }, 1000)*/
+                    }, 1000)
                 }
             }).execute()
     }

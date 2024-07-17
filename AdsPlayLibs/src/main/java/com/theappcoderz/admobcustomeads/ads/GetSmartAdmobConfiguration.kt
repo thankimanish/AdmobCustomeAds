@@ -119,7 +119,6 @@ class GetSmartAdmobConfiguration(
     }
 
     private fun onPostExecute(success: Boolean) {
-        AdsApplication.appOpenAdManager = AppOpenAdManager(AdsApplication.getInstance())
         createTimer(AppConstant.COUNTER_TIME)
         googleMobileAdsConsentManager = GoogleMobileAdsConsentManager.getInstance(activity)
         googleMobileAdsConsentManager.gatherConsent(activity) {
