@@ -3,6 +3,7 @@ package com.theappcoderz.admobcustomeads
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -15,17 +16,19 @@ import com.theappcoderz.admobcustomeads.ads.ApiUtils
 import com.theappcoderz.admobcustomeads.ads.AppConstant
 import com.theappcoderz.admobcustomeads.ads.AppOpenAdManager
 import com.theappcoderz.admobcustomeads.ads.InterstitialAdAdapter
+import com.theappcoderz.admobcustomeads.ads.L
 import org.json.JSONObject
 
 open class AdsApplication(private val applicationId: String) : MultiDexApplication(),
     Application.ActivityLifecycleCallbacks,
     DefaultLifecycleObserver {
-    private lateinit var appOpenAdManager: AppOpenAdManager
+    lateinit var appOpenAdManager: AppOpenAdManager
     private var currentActivity: Activity? = null
     override fun onCreate() {
         super<MultiDexApplication>.onCreate()
         registerActivityLifecycleCallbacks(this)
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
+
         AndroidThreeTen.init(applicationContext)
         instance = this
         prefs = Prefs(this, applicationId)
@@ -46,7 +49,6 @@ open class AdsApplication(private val applicationId: String) : MultiDexApplicati
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
         currentActivity?.let {
-            // Show the ad (if available) when the app moves to foreground.
             appOpenAdManager.showAdIfAvailable(it)
         }
     }
@@ -98,6 +100,7 @@ open class AdsApplication(private val applicationId: String) : MultiDexApplicati
     }
 
     fun showAdIfAvailable(activity: Activity, onShowAdCompleteListener: OnShowAdCompleteListener) {
+        
         appOpenAdManager.showAdIfAvailable(activity, onShowAdCompleteListener)
     }
 
@@ -112,7 +115,6 @@ open class AdsApplication(private val applicationId: String) : MultiDexApplicati
     }
 
     companion object {
-
         var intInterstitialAdAdapter: InterstitialAdAdapter? = null
         const val TAG = "AdsApplication"
         private var instance: AdsApplication? = null

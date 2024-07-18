@@ -37,17 +37,14 @@ class AppOpenAdManager(instance: AdsApplication?) {
         AppOpenAd.load(context,
             getopenadid(),
             request,
-            AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT,
             object : AppOpenAd.AppOpenAdLoadCallback() {
                 override fun onAdLoaded(ad: AppOpenAd) {
-                    L.e("")
                     appOpenAd = ad
                     isLoadingAd = false
                     loadTime = Date().time
                 }
 
                 override fun onAdFailedToLoad(loadAdError: LoadAdError) {
-                    L.e("")
                     isLoadingAd = false
                 }
             })
@@ -71,7 +68,6 @@ class AppOpenAdManager(instance: AdsApplication?) {
             }
 
             override fun onShowAdFailed() {
-
             }
         })
     }
@@ -84,6 +80,7 @@ class AppOpenAdManager(instance: AdsApplication?) {
             return
         }
         if (!isAdAvailable()) {
+            
             onShowAdCompleteListener.onShowAdFailed()
             if (googleMobileAdsConsentManager?.canRequestAds == true) {
                 loadAd(activity)
@@ -93,6 +90,7 @@ class AppOpenAdManager(instance: AdsApplication?) {
 
         appOpenAd!!.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdDismissedFullScreenContent() {
+                
                 // Set the reference to null so isAdAvailable() returns false.
                 appOpenAd = null
                 isShowingAd = false
@@ -105,6 +103,7 @@ class AppOpenAdManager(instance: AdsApplication?) {
 
             /** Called when fullscreen content failed to show. */
             override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                
                 appOpenAd = null
                 isShowingAd = false
 
@@ -117,6 +116,7 @@ class AppOpenAdManager(instance: AdsApplication?) {
 
             /** Called when fullscreen content is shown. */
             override fun onAdShowedFullScreenContent() {
+                
                 //broswerdontpause()
             }
         }

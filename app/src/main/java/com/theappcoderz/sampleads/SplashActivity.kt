@@ -53,10 +53,9 @@ class SplashActivity : AppCompatActivity(), OnCallApiResponce {
                                 MainActivity::class.java
                             )
                         )
-                        finish()
-                    }, 1000)
+                    }, 100)
                 }
-            }).execute()
+            })
     }
 
     override fun onFailed() {
