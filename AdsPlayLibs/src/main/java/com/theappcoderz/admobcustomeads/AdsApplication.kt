@@ -39,7 +39,8 @@ open class AdsApplication(private val applicationId: String) : MultiDexApplicati
             }
         }
         MobileAds.initialize(this)
-        appOpenAdManager = AppOpenAdManager(getInstance())
+
+        appOpenAdManager = getappmanagerinstance()
         intInterstitialAdAdapter = InterstitialAdAdapter()
     }
 
@@ -115,10 +116,16 @@ open class AdsApplication(private val applicationId: String) : MultiDexApplicati
         var intInterstitialAdAdapter: InterstitialAdAdapter? = null
         const val TAG = "AdsApplication"
         private var instance: AdsApplication? = null
-
+        private var appopenmanger: AppOpenAdManager? = null
         @Synchronized
         fun getInstance(): AdsApplication? {
             return instance
+        }
+
+        fun getappmanagerinstance(): AppOpenAdManager {
+            return appopenmanger ?: synchronized(this) {
+                appopenmanger ?: AppOpenAdManager(getInstance()).also { appopenmanger = it }
+            }
         }
 
         init {

@@ -108,11 +108,10 @@ class AppOpenAdManager(val instance: AdsApplication?) {
 
             /** Called when fullscreen content is shown. */
             override fun onAdShowedFullScreenContent() {
-                
-                //broswerdontpause()
+                appOpenAd = null
+                isShowingAd = true
             }
         }
-        isShowingAd = true
         appOpenAd!!.show(activity)
     }
     private fun isAdAvailable(): Boolean {

@@ -14,9 +14,9 @@
         android:theme="@style/Theme.AdmobCustomeAds"
         tools:targetApi="31">
         <activity
-            android:noHistory="true"
             android:name=".SplashActivity"
             android:exported="true"
+            android:noHistory="true"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
