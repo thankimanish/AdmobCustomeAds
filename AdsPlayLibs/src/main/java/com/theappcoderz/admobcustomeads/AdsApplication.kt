@@ -43,7 +43,9 @@ open class AdsApplication(private val applicationId: String) : MultiDexApplicati
         appOpenAdManager = AppOpenAdManager(getInstance())
         intInterstitialAdAdapter = InterstitialAdAdapter()
     }
-
+    fun isAdAvailable(): Boolean {
+        return appOpenAdManager.appOpenAd != null && wasLoadTimeLessThanNHoursAgo(0.01)
+    }
     private fun wasLoadTimeLessThanNHoursAgo(numHours: Double): Boolean {
         if(myloadTime==0L){
             return true
@@ -55,7 +57,7 @@ open class AdsApplication(private val applicationId: String) : MultiDexApplicati
     }
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
-        if(wasLoadTimeLessThanNHoursAgo(0.01)) {
+        if(isAdAvailable()) {
             currentActivity?.let {
                 appOpenAdManager.showAdIfAvailable(it)
             }

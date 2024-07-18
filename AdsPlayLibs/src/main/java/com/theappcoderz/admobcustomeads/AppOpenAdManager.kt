@@ -12,13 +12,12 @@ import com.theappcoderz.admobcustomeads.ads.AdsConfiguration
 import com.theappcoderz.admobcustomeads.ads.GoogleMobileAdsConsentManager
 import java.util.Date
 
-class AppOpenAdManager(instance: AdsApplication?) {
+class AppOpenAdManager(val instance: AdsApplication?) {
     private var googleMobileAdsConsentManager: GoogleMobileAdsConsentManager? =
         instance?.let { GoogleMobileAdsConsentManager.getInstance(it) }
-    private var appOpenAd: AppOpenAd? = null
+    var appOpenAd: AppOpenAd? = null
     private var isLoadingAd = false
     var isShowingAd = false
-    private var loadTime: Long = 0
 
     private fun getopenadid(): String {
         return if (AdsConfiguration.display_ad_enable == 1 && AdsConfiguration.first_opened_enable == 1) {
@@ -29,7 +28,7 @@ class AppOpenAdManager(instance: AdsApplication?) {
     }
 
     fun loadAd(context: Context) {
-        if (isLoadingAd || isAdAvailable() && AdsConfiguration.first_opened_enable == 0) {
+        if (isLoadingAd || instance?.isAdAvailable() == true && AdsConfiguration.first_opened_enable == 0) {
             return
         }
         isLoadingAd = true
@@ -42,7 +41,7 @@ class AppOpenAdManager(instance: AdsApplication?) {
                 override fun onAdLoaded(ad: AppOpenAd) {
                     appOpenAd = ad
                     isLoadingAd = false
-                    loadTime = Date().time
+                    AdsApplication.myloadTime = Date().time
                 }
 
                 override fun onAdFailedToLoad(loadAdError: LoadAdError) {
@@ -52,15 +51,8 @@ class AppOpenAdManager(instance: AdsApplication?) {
         // Do not load ad if there is an unused ad or one is already loading.
     }
 
-    private fun wasLoadTimeLessThanNHoursAgo(numHours: Long): Boolean {
-        val dateDifference: Long = Date().time - loadTime
-        val numMilliSecondsPerHour: Long = 3600000
-        return dateDifference < (numMilliSecondsPerHour * numHours)
-    }
 
-    private fun isAdAvailable(): Boolean {
-        return appOpenAd != null && wasLoadTimeLessThanNHoursAgo(4)
-    }
+
 
     fun showAdIfAvailable(activity: Activity) {
         showAdIfAvailable(activity, object : AdsApplication.OnShowAdCompleteListener {
@@ -80,8 +72,7 @@ class AppOpenAdManager(instance: AdsApplication?) {
         if (isShowingAd) {
             return
         }
-        if (!isAdAvailable()) {
-            
+        if (instance?.isAdAvailable() != true) {
             onShowAdCompleteListener.onShowAdFailed()
             if (googleMobileAdsConsentManager?.canRequestAds == true) {
                 loadAd(activity)
