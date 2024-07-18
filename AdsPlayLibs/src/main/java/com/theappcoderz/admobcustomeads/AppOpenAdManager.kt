@@ -1,4 +1,4 @@
-package com.theappcoderz.admobcustomeads.ads
+package com.theappcoderz.admobcustomeads
 
 import android.app.Activity
 import android.content.Context
@@ -8,7 +8,8 @@ import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.appopen.AppOpenAd
-import com.theappcoderz.admobcustomeads.AdsApplication
+import com.theappcoderz.admobcustomeads.ads.AdsConfiguration
+import com.theappcoderz.admobcustomeads.ads.GoogleMobileAdsConsentManager
 import java.util.Date
 
 class AppOpenAdManager(instance: AdsApplication?) {
@@ -64,7 +65,7 @@ class AppOpenAdManager(instance: AdsApplication?) {
     fun showAdIfAvailable(activity: Activity) {
         showAdIfAvailable(activity, object : AdsApplication.OnShowAdCompleteListener {
             override fun onShowAdComplete() {
-                //AdsApplication.myloadTime = Date().time
+                AdsApplication.myloadTime = Date().time
             }
 
             override fun onShowAdFailed() {

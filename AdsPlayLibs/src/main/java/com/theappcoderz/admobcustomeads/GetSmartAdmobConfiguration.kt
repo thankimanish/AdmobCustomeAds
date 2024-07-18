@@ -1,10 +1,13 @@
-package com.theappcoderz.admobcustomeads.ads
+package com.theappcoderz.admobcustomeads
 
 import android.app.Activity
 import android.os.CountDownTimer
 import com.google.android.gms.ads.MobileAds
-import com.theappcoderz.admobcustomeads.AdsApplication
-import com.theappcoderz.admobcustomeads.Prefs
+import com.theappcoderz.admobcustomeads.ads.Adp
+import com.theappcoderz.admobcustomeads.ads.AdsConfiguration
+import com.theappcoderz.admobcustomeads.ads.AppConstant
+import com.theappcoderz.admobcustomeads.ads.GoogleMobileAdsConsentManager
+import com.theappcoderz.admobcustomeads.ads.InterAdListener
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -102,7 +105,7 @@ class GetSmartAdmobConfiguration(
                 }
             }
             if (googleMobileAdsConsentManager.canRequestAds) {
-                
+
                 initializeMobileAdsSdk()
             }
 

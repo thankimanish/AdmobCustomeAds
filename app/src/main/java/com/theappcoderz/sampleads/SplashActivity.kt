@@ -7,7 +7,7 @@ import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import com.theappcoderz.admobcustomeads.AdsApplication
 import com.theappcoderz.admobcustomeads.NetworkUtils
-import com.theappcoderz.admobcustomeads.ads.GetSmartAdmobConfiguration
+import com.theappcoderz.admobcustomeads.GetSmartAdmobConfiguration
 import com.theappcoderz.admobcustomeads.api.ApiCallAdsConfig
 import com.theappcoderz.admobcustomeads.api.OnCallApiResponce
 import com.theappcoderz.sampleads.databinding.ActivitySplashBinding

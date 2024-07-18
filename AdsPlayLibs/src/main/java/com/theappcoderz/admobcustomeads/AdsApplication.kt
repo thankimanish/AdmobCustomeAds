@@ -3,7 +3,6 @@ package com.theappcoderz.admobcustomeads
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -14,15 +13,14 @@ import com.jakewharton.threetenabp.AndroidThreeTen
 import com.theappcoderz.admobcustomeads.ads.Adp
 import com.theappcoderz.admobcustomeads.ads.ApiUtils
 import com.theappcoderz.admobcustomeads.ads.AppConstant
-import com.theappcoderz.admobcustomeads.ads.AppOpenAdManager
 import com.theappcoderz.admobcustomeads.ads.InterstitialAdAdapter
-import com.theappcoderz.admobcustomeads.ads.L
 import org.json.JSONObject
+import java.util.Date
 
 open class AdsApplication(private val applicationId: String) : MultiDexApplication(),
     Application.ActivityLifecycleCallbacks,
     DefaultLifecycleObserver {
-    lateinit var appOpenAdManager: AppOpenAdManager
+    private lateinit var appOpenAdManager: AppOpenAdManager
     private var currentActivity: Activity? = null
     override fun onCreate() {
         super<MultiDexApplication>.onCreate()
@@ -46,10 +44,21 @@ open class AdsApplication(private val applicationId: String) : MultiDexApplicati
         intInterstitialAdAdapter = InterstitialAdAdapter()
     }
 
+    private fun wasLoadTimeLessThanNHoursAgo(numHours: Double): Boolean {
+        if(myloadTime==0L){
+            return true
+        }
+        val dateDifference: Long = Date().time - myloadTime
+        val numMilliSecondsPerHour: Long = 3600000
+        var timsp = numMilliSecondsPerHour * numHours
+        return dateDifference > timsp
+    }
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
-        currentActivity?.let {
-            appOpenAdManager.showAdIfAvailable(it)
+        if(wasLoadTimeLessThanNHoursAgo(0.01)) {
+            currentActivity?.let {
+                appOpenAdManager.showAdIfAvailable(it)
+            }
         }
     }
 
@@ -115,6 +124,7 @@ open class AdsApplication(private val applicationId: String) : MultiDexApplicati
     }
 
     companion object {
+        var myloadTime: Long = 0
         var intInterstitialAdAdapter: InterstitialAdAdapter? = null
         const val TAG = "AdsApplication"
         private var instance: AdsApplication? = null
