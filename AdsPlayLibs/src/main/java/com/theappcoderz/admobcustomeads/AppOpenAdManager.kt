@@ -18,6 +18,7 @@ class AppOpenAdManager(val instance: AdsApplication?) {
     var appOpenAd: AppOpenAd? = null
     private var isLoadingAd = false
     var isShowingAd = false
+    private var loadTime: Long = 0
 
     private fun getopenadid(): String {
         return if (AdsConfiguration.display_ad_enable == 1 && AdsConfiguration.first_opened_enable == 1) {
@@ -28,7 +29,7 @@ class AppOpenAdManager(val instance: AdsApplication?) {
     }
 
     fun loadAd(context: Context) {
-        if (isLoadingAd || instance?.isAdAvailable() == true && AdsConfiguration.first_opened_enable == 0) {
+        if ((isLoadingAd || isAdAvailable()) && AdsConfiguration.first_opened_enable == 0) {
             return
         }
         isLoadingAd = true
@@ -41,7 +42,7 @@ class AppOpenAdManager(val instance: AdsApplication?) {
                 override fun onAdLoaded(ad: AppOpenAd) {
                     appOpenAd = ad
                     isLoadingAd = false
-                    AdsApplication.myloadTime = Date().time
+                    loadTime = Date().time
                 }
 
                 override fun onAdFailedToLoad(loadAdError: LoadAdError) {
@@ -57,7 +58,6 @@ class AppOpenAdManager(val instance: AdsApplication?) {
     fun showAdIfAvailable(activity: Activity) {
         showAdIfAvailable(activity, object : AdsApplication.OnShowAdCompleteListener {
             override fun onShowAdComplete() {
-                AdsApplication.myloadTime = Date().time
             }
 
             override fun onShowAdFailed() {
@@ -72,7 +72,7 @@ class AppOpenAdManager(val instance: AdsApplication?) {
         if (isShowingAd) {
             return
         }
-        if (instance?.isAdAvailable() != true) {
+        if (!isAdAvailable()) {
             onShowAdCompleteListener.onShowAdFailed()
             if (googleMobileAdsConsentManager?.canRequestAds == true) {
                 loadAd(activity)
@@ -114,5 +114,16 @@ class AppOpenAdManager(val instance: AdsApplication?) {
         }
         isShowingAd = true
         appOpenAd!!.show(activity)
+    }
+    private fun isAdAvailable(): Boolean {
+        // Ad references in the app open beta will time out after four hours, but this time limit
+        // may change in future beta versions. For details, see:
+        // https://support.google.com/admob/answer/9341964?hl=en
+        return appOpenAd != null && wasLoadTimeLessThanNHoursAgo(4)
+    }
+    private fun wasLoadTimeLessThanNHoursAgo(numHours: Long): Boolean {
+        val dateDifference: Long = Date().time - loadTime
+        val numMilliSecondsPerHour: Long = 3600000
+        return dateDifference < numMilliSecondsPerHour * numHours
     }
 }

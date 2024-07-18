@@ -15,7 +15,6 @@ import com.theappcoderz.admobcustomeads.ads.ApiUtils
 import com.theappcoderz.admobcustomeads.ads.AppConstant
 import com.theappcoderz.admobcustomeads.ads.InterstitialAdAdapter
 import org.json.JSONObject
-import java.util.Date
 
 open class AdsApplication(private val applicationId: String) : MultiDexApplication(),
     Application.ActivityLifecycleCallbacks,
@@ -43,24 +42,11 @@ open class AdsApplication(private val applicationId: String) : MultiDexApplicati
         appOpenAdManager = AppOpenAdManager(getInstance())
         intInterstitialAdAdapter = InterstitialAdAdapter()
     }
-    fun isAdAvailable(): Boolean {
-        return appOpenAdManager.appOpenAd != null && wasLoadTimeLessThanNHoursAgo(0.01)
-    }
-    private fun wasLoadTimeLessThanNHoursAgo(numHours: Double): Boolean {
-        if(myloadTime==0L){
-            return true
-        }
-        val dateDifference: Long = Date().time - myloadTime
-        val numMilliSecondsPerHour: Long = 3600000
-        var timsp = numMilliSecondsPerHour * numHours
-        return dateDifference > timsp
-    }
+
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
-        if(isAdAvailable()) {
-            currentActivity?.let {
-                appOpenAdManager.showAdIfAvailable(it)
-            }
+        currentActivity?.let {
+            appOpenAdManager.showAdIfAvailable(it)
         }
     }
 
@@ -111,7 +97,7 @@ open class AdsApplication(private val applicationId: String) : MultiDexApplicati
     }
 
     fun showAdIfAvailable(activity: Activity, onShowAdCompleteListener: OnShowAdCompleteListener) {
-        
+
         appOpenAdManager.showAdIfAvailable(activity, onShowAdCompleteListener)
     }
 
@@ -126,7 +112,6 @@ open class AdsApplication(private val applicationId: String) : MultiDexApplicati
     }
 
     companion object {
-        var myloadTime: Long = 0
         var intInterstitialAdAdapter: InterstitialAdAdapter? = null
         const val TAG = "AdsApplication"
         private var instance: AdsApplication? = null

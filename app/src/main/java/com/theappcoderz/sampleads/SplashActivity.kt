@@ -53,7 +53,7 @@ class SplashActivity : AppCompatActivity(), OnCallApiResponce {
                                 MainActivity::class.java
                             )
                         )
-                    }, 100)
+                    }, 0)
                 }
             })
     }

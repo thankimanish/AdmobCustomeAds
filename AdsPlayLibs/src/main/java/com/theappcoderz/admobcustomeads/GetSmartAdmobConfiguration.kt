@@ -16,11 +16,11 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 class GetSmartAdmobConfiguration(
     private val activity: Activity,
-    private val prefs: Prefs?,
-    private val adsId: Adp,
+    prefs: Prefs?,
+    adsId: Adp,
     private val listener: SmartListener
 ) {
-    private lateinit var googleMobileAdsConsentManager: GoogleMobileAdsConsentManager
+    private var googleMobileAdsConsentManager: GoogleMobileAdsConsentManager
     private val isMobileAdsInitializeCalled = AtomicBoolean(false)
 
     init {
@@ -92,24 +92,21 @@ class GetSmartAdmobConfiguration(
         AdsConfiguration.manage_native = adsId.manage_native
         AdsConfiguration.manage_exit_ads = adsId.manage_exit_ads
         AdsConfiguration.getdomainlist = adsId.getdomainlist
-        val application = activity.application as? AdsApplication
-        if (application != null) {
-            createTimer(AppConstant.COUNTER_TIME)
-            googleMobileAdsConsentManager = GoogleMobileAdsConsentManager.getInstance(activity)
-            googleMobileAdsConsentManager.gatherConsent(activity) {
-                if (googleMobileAdsConsentManager.canRequestAds) {
-                    initializeMobileAdsSdk()
-                }
-                if (secondsRemaining <= 0) {
-                    listener.onFinish(true)
-                }
-            }
+        createTimer(AppConstant.COUNTER_TIME)
+        googleMobileAdsConsentManager = GoogleMobileAdsConsentManager.getInstance(activity)
+        googleMobileAdsConsentManager.gatherConsent(activity) {
             if (googleMobileAdsConsentManager.canRequestAds) {
-
                 initializeMobileAdsSdk()
             }
-
+            if (secondsRemaining <= 0) {
+                listener.onFinish(true)
+            }
         }
+        if (googleMobileAdsConsentManager.canRequestAds) {
+
+            initializeMobileAdsSdk()
+        }
+
         /*CoroutineScope(Dispatchers.Main).launch {
             withContext(Dispatchers.IO) {
             }
@@ -134,24 +131,16 @@ class GetSmartAdmobConfiguration(
                             object : InterAdListener {
                                 override fun onAdClose(type: String) {
                                     if (googleMobileAdsConsentManager.canRequestAds) {
-                                        
                                         listener.onFinish(true)
                                     }
                                 }
                             })
                     } else {
                         if (AdsConfiguration.first_opened_enable == 1) {
-                            val application = activity.application as? AdsApplication
-                            // If the application is not an instance of MyApplication, log an error message and
-                            // start the MainActivity without showing the app open ad.
-                            if (application == null) {
-                                listener.onFinish(true)
-                                return
-                            }
-                            application.showAdIfAvailable(activity,
+                            (activity.application as AdsApplication).showAdIfAvailable(activity,
                                 object : AdsApplication.OnShowAdCompleteListener {
                                     override fun onShowAdComplete() {
-                                        
+
                                         if (googleMobileAdsConsentManager.canRequestAds) {
                                             AdsConfiguration.isLoadFirstOpenOrInter = true
                                             listener.onFinish(true)
@@ -159,7 +148,7 @@ class GetSmartAdmobConfiguration(
                                     }
 
                                     override fun onShowAdFailed() {
-                                        
+
                                         if (googleMobileAdsConsentManager.canRequestAds) {
                                             AdsConfiguration.isLoadFirstOpenOrInter = false
                                             listener.onFinish(true)
@@ -167,7 +156,6 @@ class GetSmartAdmobConfiguration(
                                     }
                                 })
                         } else {
-                            
                             listener.onFinish(true)
                         }
                     }
@@ -181,7 +169,6 @@ class GetSmartAdmobConfiguration(
 
     private fun initializeMobileAdsSdk() {
         if (isMobileAdsInitializeCalled.getAndSet(true)) {
-            
             return
         }
         CoroutineScope(Dispatchers.IO).launch {
