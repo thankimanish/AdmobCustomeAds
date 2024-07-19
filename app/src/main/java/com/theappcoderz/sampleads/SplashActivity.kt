@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.theappcoderz.admobcustomeads.AdsApplication
 import com.theappcoderz.admobcustomeads.NetworkUtils
 import com.theappcoderz.admobcustomeads.GetSmartAdmobConfiguration
+import com.theappcoderz.admobcustomeads.ads.L
 import com.theappcoderz.admobcustomeads.api.ApiCallAdsConfig
 import com.theappcoderz.admobcustomeads.api.OnCallApiResponce
 import com.theappcoderz.sampleads.databinding.ActivitySplashBinding
@@ -39,6 +40,12 @@ class SplashActivity : AppCompatActivity(), OnCallApiResponce {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        L.e("")
+        (application as AdsApplication).unloadAd(this)
+    }
+
     override fun onResponseForSplash() {
         GetSmartAdmobConfiguration(
             this,
@@ -53,6 +60,7 @@ class SplashActivity : AppCompatActivity(), OnCallApiResponce {
                                 MainActivity::class.java
                             )
                         )
+                        finish()
                     }, 0)
                 }
             })

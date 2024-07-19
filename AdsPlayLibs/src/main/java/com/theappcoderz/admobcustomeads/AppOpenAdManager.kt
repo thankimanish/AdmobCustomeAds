@@ -10,6 +10,7 @@ import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.appopen.AppOpenAd
 import com.theappcoderz.admobcustomeads.ads.AdsConfiguration
 import com.theappcoderz.admobcustomeads.ads.GoogleMobileAdsConsentManager
+import com.theappcoderz.admobcustomeads.ads.L
 import java.util.Date
 
 class AppOpenAdManager(val instance: AdsApplication?) {
@@ -26,6 +27,9 @@ class AppOpenAdManager(val instance: AdsApplication?) {
         } else {
             ""
         }
+    }
+    fun unload(){
+        appOpenAd?.fullScreenContentCallback?.onAdDismissedFullScreenContent()
     }
 
     fun loadAd(context: Context) {
@@ -73,6 +77,7 @@ class AppOpenAdManager(val instance: AdsApplication?) {
             return
         }
         if (!isAdAvailable()) {
+            L.e("")
             onShowAdCompleteListener.onShowAdFailed()
             if (googleMobileAdsConsentManager?.canRequestAds == true) {
                 loadAd(activity)
@@ -118,11 +123,11 @@ class AppOpenAdManager(val instance: AdsApplication?) {
         // Ad references in the app open beta will time out after four hours, but this time limit
         // may change in future beta versions. For details, see:
         // https://support.google.com/admob/answer/9341964?hl=en
-        return appOpenAd != null && wasLoadTimeLessThanNHoursAgo(4)
+        return appOpenAd != null && wasLoadTimeLessThanNHoursAgo(0.01)
     }
-    private fun wasLoadTimeLessThanNHoursAgo(numHours: Long): Boolean {
+    private fun wasLoadTimeLessThanNHoursAgo(numHours: Double): Boolean {
         val dateDifference: Long = Date().time - loadTime
         val numMilliSecondsPerHour: Long = 3600000
-        return dateDifference < numMilliSecondsPerHour * numHours
+        return dateDifference > numMilliSecondsPerHour * numHours
     }
 }

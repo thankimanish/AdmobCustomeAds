@@ -101,7 +101,9 @@ open class AdsApplication(private val applicationId: String) : MultiDexApplicati
 
         appOpenAdManager.showAdIfAvailable(activity, onShowAdCompleteListener)
     }
-
+    fun unloadAd(activity: Activity) {
+        appOpenAdManager.unload()
+    }
     fun loadAd(activity: Activity) {
         appOpenAdManager.loadAd(activity)
     }
