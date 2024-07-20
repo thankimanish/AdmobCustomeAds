@@ -123,11 +123,10 @@ class AppOpenAdManager(val instance: AdsApplication?) {
         // Ad references in the app open beta will time out after four hours, but this time limit
         // may change in future beta versions. For details, see:
         // https://support.google.com/admob/answer/9341964?hl=en
-        return appOpenAd != null && wasLoadTimeLessThanNHoursAgo(0.01)
+        return appOpenAd != null && wasLoadTimeLessThanNHoursAgo(10000L)
     }
-    private fun wasLoadTimeLessThanNHoursAgo(numHours: Double): Boolean {
+    private fun wasLoadTimeLessThanNHoursAgo(numMilliSecondsPerHour: Long): Boolean {
         val dateDifference: Long = Date().time - loadTime
-        val numMilliSecondsPerHour: Long = 3600000
-        return dateDifference > numMilliSecondsPerHour * numHours
+        return dateDifference > numMilliSecondsPerHour
     }
 }
