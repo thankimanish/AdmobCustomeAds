@@ -15,4 +15,12 @@ interface ApiInterface {
         @Query("package_name") package_name: String,
         @Query("app_version") app_version: String
     ): Call<String>
+
+    @GET("api.php?")
+    fun getListByCategory(
+        @Query("method_name") getFromApp: String,
+        @Query("package_name") package_name: String,
+        @Query("package_version") app_version: String,
+        @Query("cat_id") cat_id: String
+    ): Call<String>
 }

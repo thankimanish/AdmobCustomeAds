@@ -38,8 +38,15 @@ object ApiUtils {
             return sid
         }
     }
-
+    fun getpackagesorappinfo(js:JSONObject):JSONObject {
+        return if (js.has("appinfo")) {
+            js.getJSONObject("appinfo")
+        } else {
+            js.getJSONObject("packages")
+        }
+    }
     fun getParsingAdsInformation(js: JSONObject) {
+
         AdsApplication.packages = Adp(
             adType(js.getString("first_ad_type"), js.getString("second_ad_type")),
             js.getString("package_name"),
@@ -120,10 +127,74 @@ object ApiUtils {
             js.getString("custome_ads_image_url"),
             js.getString("custome_ads_install_url"),
             js.getString("install_type").toInt(),
-            js.getString("openad_load_as_inter").toInt(),
-            js.getString("manage_native").toInt(),
-            js.getString("manage_exit_ads").toInt(),
+            getisopt(js).toInt(),
+            mangetnativeads(js).toInt(),
+            manageexitads(js).toInt(),
             getdomainlist(js.getJSONArray("domain_list"))
         )
+    }
+
+    fun getParsingAdsLink(jo: JSONObject) {
+        try {
+            if (jo.has("link" + AppConstant.CAT_ID)) {
+                AdsApplication.link1.clear()
+                val link = jo.getJSONArray("link" + AppConstant.CAT_ID)
+                for (i in 0 until link.length()) {
+                    val datajs = link.getJSONObject(i)
+                    val linkss = Link(
+                        datajs.optString("id"),
+                        datajs.optString("title"),
+                        datajs.optString("url"),
+                        generateLink(datajs.optString("token")),
+                        datajs.optString("name"),
+                        datajs.optString("description"),
+                        ConvertIntoNumeric(datajs.optString("promo")),
+                        datajs.optString("create"),
+                        datajs.optString("post_url"),
+                        AdsApplication.db.isDeleted(datajs.getString("id")),
+                        datajs.optString("token")
+                    )
+                    AdsApplication.link1.add(linkss)
+                }
+            }
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+    }
+    private fun ConvertIntoNumeric(xVal: String): Int {
+        return try {
+            xVal.toInt()
+        } catch (ex: java.lang.Exception) {
+            0
+        }
+    }
+
+    private fun getisopt(js:JSONObject):String {
+        return if (js.isNull("openad_load_as_inter")) {
+            "0"
+        } else {
+            js.optString("openad_load_as_inter").toString()
+        }
+    }
+    private fun mangetnativeads(js:JSONObject):String {
+        return if (js.isNull("manage_native")) {
+            "0"
+        } else {
+            js.optString("manage_native").toString()
+        }
+    }
+    private fun manageexitads(js:JSONObject):String {
+        return if (js.isNull("manage_exit_ads")) {
+            "0"
+        } else {
+            js.optString("manage_exit_ads").toString()
+        }
+    }
+
+    private fun generateLink(token: String): String {
+        val a: StringBuilder = StringBuilder("coinmaster://promotions?af_deeplink=true@campaign=")
+        a.append(token)
+        a.append("&media_source=FB_PAGE")
+        return a.toString()
     }
 }

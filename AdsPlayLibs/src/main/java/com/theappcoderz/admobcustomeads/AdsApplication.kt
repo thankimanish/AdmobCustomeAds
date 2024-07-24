@@ -13,7 +13,9 @@ import com.jakewharton.threetenabp.AndroidThreeTen
 import com.theappcoderz.admobcustomeads.ads.Adp
 import com.theappcoderz.admobcustomeads.ads.ApiUtils
 import com.theappcoderz.admobcustomeads.ads.AppConstant
+import com.theappcoderz.admobcustomeads.ads.DatabaseHelper
 import com.theappcoderz.admobcustomeads.ads.InterstitialAdAdapter
+import com.theappcoderz.admobcustomeads.ads.Link
 import org.json.JSONObject
 
 open class AdsApplication(private val applicationId: String) : MultiDexApplication(),
@@ -32,8 +34,9 @@ open class AdsApplication(private val applicationId: String) : MultiDexApplicati
         if (prefs!!.contains(AppConstant.JSONRESPONSE)) {
             try {
                 val jo = JSONObject(prefs!!.getString(AppConstant.JSONRESPONSE, "").toString())
-                val js = jo.getJSONObject("appinfo")
+                val js = ApiUtils.getpackagesorappinfo(jo)
                 ApiUtils.getParsingAdsInformation(js)
+                ApiUtils.getParsingAdsLink(jo)
             } catch (e: java.lang.Exception) {
                 e.printStackTrace()
             }
@@ -43,6 +46,7 @@ open class AdsApplication(private val applicationId: String) : MultiDexApplicati
         appOpenAdManager = getappmanagerinstance()
         intInterstitialAdAdapter = InterstitialAdAdapter()
     }
+
 
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
@@ -115,6 +119,7 @@ open class AdsApplication(private val applicationId: String) : MultiDexApplicati
     }
 
     companion object {
+        var link1: ArrayList<Link> = ArrayList()
         var intInterstitialAdAdapter: InterstitialAdAdapter? = null
         const val TAG = "AdsApplication"
         private var instance: AdsApplication? = null
@@ -136,6 +141,7 @@ open class AdsApplication(private val applicationId: String) : MultiDexApplicati
 
         var prefs: Prefs? = null
         var packages = Adp.createDefault()
+        var db = DatabaseHelper(getInstance())
     }
 
 }

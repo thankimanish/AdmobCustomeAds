@@ -18,5 +18,15 @@ class APIClientAppInfo {
                 }
                 return retofit!!
             }
+        val clientlink: Retrofit
+            get() {
+                if (retofit == null) {
+                    retofit = Retrofit.Builder()
+                        .baseUrl("http://appmobiztech.in/linkmaster/")
+                        .addConverterFactory(ScalarsConverterFactory.create())
+                        .build()
+                }
+                return retofit!!
+            }
     }
 }
