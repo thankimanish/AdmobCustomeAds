@@ -213,11 +213,13 @@ open class AdsApplication(private val applicationId: String) : MultiDexApplicati
 
 
             var install = alertCustomdialog.findViewById<View>(R.id.ad_install) as Button
-            var cancel_button = alertCustomdialog.findViewById<View>(R.id.cancel_button) as ImageView
+            var cancel_button =
+                alertCustomdialog.findViewById<View>(R.id.cancel_button) as ImageView
             var ad_app_icon = alertCustomdialog.findViewById<View>(R.id.ad_app_icon) as ImageView
             var ad_image = alertCustomdialog.findViewById<View>(R.id.ad_image) as ImageView
             var ad_headline = alertCustomdialog.findViewById<View>(R.id.ad_headline) as TextView
-            var ad_description = alertCustomdialog.findViewById<View>(R.id.ad_description) as TextView
+            var ad_description =
+                alertCustomdialog.findViewById<View>(R.id.ad_description) as TextView
 
             if (packages.install_type === 0) {
                 cancel_button.visibility = View.VISIBLE
@@ -334,6 +336,15 @@ open class AdsApplication(private val applicationId: String) : MultiDexApplicati
                 .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
             var dialog: AlertDialog = builder.create()
             dialog.show()
+        }
+
+        fun redirecttoweb(data: String, context: Context) {
+            val intent1 = Intent(
+                context,
+                StandardWebView::class.java
+            )
+            intent1.putExtra("ppurl", data)
+            context.startActivity(intent1)
         }
 
     }
