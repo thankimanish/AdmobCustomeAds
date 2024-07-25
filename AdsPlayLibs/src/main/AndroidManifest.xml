@@ -43,5 +43,9 @@
             android:exported="false"
             android:theme="@style/Theme.AdTheme"
             tools:replace="android:theme" />
+        <activity
+            android:name=".StandardWebView"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:exported="false" />
     </application>
 </manifest>
