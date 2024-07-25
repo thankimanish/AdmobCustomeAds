@@ -28,12 +28,16 @@ class AppOpenAdManager(val instance: AdsApplication?) {
             ""
         }
     }
-    fun unload(){
+
+    fun unload() {
         appOpenAd?.fullScreenContentCallback?.onAdDismissedFullScreenContent()
     }
 
     fun loadAd(context: Context) {
-        if ((isLoadingAd || isAdAvailable()) && AdsConfiguration.first_opened_enable == 0) {
+        if (isLoadingAd || isAdAvailable()) {
+            return
+        }
+        if (AdsConfiguration.first_opened_enable == 0) {
             return
         }
         isLoadingAd = true
@@ -55,8 +59,6 @@ class AppOpenAdManager(val instance: AdsApplication?) {
             })
         // Do not load ad if there is an unused ad or one is already loading.
     }
-
-
 
 
     fun showAdIfAvailable(activity: Activity) {
@@ -87,7 +89,7 @@ class AppOpenAdManager(val instance: AdsApplication?) {
 
         appOpenAd!!.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdDismissedFullScreenContent() {
-                
+
                 // Set the reference to null so isAdAvailable() returns false.
                 appOpenAd = null
                 isShowingAd = false
@@ -100,7 +102,7 @@ class AppOpenAdManager(val instance: AdsApplication?) {
 
             /** Called when fullscreen content failed to show. */
             override fun onAdFailedToShowFullScreenContent(adError: AdError) {
-                
+
                 appOpenAd = null
                 isShowingAd = false
 
@@ -119,13 +121,18 @@ class AppOpenAdManager(val instance: AdsApplication?) {
         }
         appOpenAd!!.show(activity)
     }
+
     private fun isAdAvailable(): Boolean {
         // Ad references in the app open beta will time out after four hours, but this time limit
         // may change in future beta versions. For details, see:
         // https://support.google.com/admob/answer/9341964?hl=en
         return appOpenAd != null && wasLoadTimeLessThanNHoursAgo(10000L)
     }
+
     private fun wasLoadTimeLessThanNHoursAgo(numMilliSecondsPerHour: Long): Boolean {
+        if (loadTime == 0L) {
+            return false
+        }
         val dateDifference: Long = Date().time - loadTime
         return dateDifference > numMilliSecondsPerHour
     }
