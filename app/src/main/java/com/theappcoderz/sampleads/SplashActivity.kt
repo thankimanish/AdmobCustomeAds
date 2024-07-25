@@ -27,15 +27,15 @@ class SplashActivity : AppCompatActivity(), OnCallApiResponce {
             }
 
             NetworkUtils.NetworkType.WIFI -> {
-                ApiCallAdsConfig(this@SplashActivity, this@SplashActivity).appInfoAdsData("","","")
+                ApiCallAdsConfig(this@SplashActivity, this@SplashActivity).appInfoAdsData("app_settings_adx","","https://theappcoderz.com/appinfo/")
             }
 
             NetworkUtils.NetworkType.CELLULAR -> {
-                ApiCallAdsConfig(this@SplashActivity, this@SplashActivity).appInfoAdsData("","","")
+                ApiCallAdsConfig(this@SplashActivity, this@SplashActivity).appInfoAdsData("app_settings_adx","","https://theappcoderz.com/appinfo/")
             }
 
             NetworkUtils.NetworkType.VPN -> {
-                ApiCallAdsConfig(this@SplashActivity, this@SplashActivity).appInfoAdsData("","","")
+                ApiCallAdsConfig(this@SplashActivity, this@SplashActivity).appInfoAdsData("app_settings_adx","","https://theappcoderz.com/appinfo/")
             }
         }
     }

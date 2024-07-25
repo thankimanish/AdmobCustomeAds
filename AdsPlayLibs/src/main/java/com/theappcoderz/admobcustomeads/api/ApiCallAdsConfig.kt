@@ -24,7 +24,12 @@ class ApiCallAdsConfig(val apilistner: OnCallApiResponce, val con: Context) {
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
         }
-        var call = apiServiceslink.getListByCategory(methodname, con.packageName, version, cat_id)
+        var call = if(cat_id.isEmpty()){
+            apiServiceslink.getList(methodname, con.packageName, version)
+        }else{
+            apiServiceslink.getListByCategory(methodname, con.packageName, version, cat_id)
+        }
+
         println(call.request().url)
         call.enqueue(object : Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {
