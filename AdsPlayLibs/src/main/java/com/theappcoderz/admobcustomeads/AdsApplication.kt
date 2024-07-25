@@ -25,6 +25,10 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.multidex.MultiDexApplication
 import com.bumptech.glide.Glide
 import com.google.android.gms.ads.MobileAds
+import com.google.android.ump.ConsentForm
+import com.google.android.ump.ConsentInformation
+import com.google.android.ump.ConsentRequestParameters
+import com.google.android.ump.UserMessagingPlatform
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.theappcoderz.admobcustomeads.ads.Adp
 import com.theappcoderz.admobcustomeads.ads.ApiUtils
@@ -34,6 +38,7 @@ import com.theappcoderz.admobcustomeads.ads.DelayedProgressDialog
 import com.theappcoderz.admobcustomeads.ads.InterstitialAdAdapter
 import com.theappcoderz.admobcustomeads.ads.Link
 import org.json.JSONObject
+import java.util.concurrent.atomic.AtomicBoolean
 
 open class AdsApplication(private val applicationId: String) : MultiDexApplication(),
     Application.ActivityLifecycleCallbacks,
@@ -346,7 +351,49 @@ open class AdsApplication(private val applicationId: String) : MultiDexApplicati
             intent1.putExtra("ppurl", data)
             context.startActivity(intent1)
         }
+        private lateinit var consentInformation: ConsentInformation
+        private var isMobileAdsInitializeCalled = AtomicBoolean(false)
+        fun consentRevocation(context: Context){
+            checkconsentform(context)
+            consentInformation.reset()
+        }
+        fun checkconsentform(context: Context){
+            val params = ConsentRequestParameters
+                .Builder()
+                .setTagForUnderAgeOfConsent(false)
+                .build()
 
+            consentInformation = UserMessagingPlatform.getConsentInformation(context)
+            consentInformation.requestConsentInfoUpdate(
+                context as Activity,
+                params,
+                {
+                    UserMessagingPlatform.loadAndShowConsentFormIfRequired(
+                        context
+                    ) {
+
+                        // Consent has been gathered.
+                        if (consentInformation.canRequestAds()) {
+                            initializeMobileAdsSdk(context)
+                        }
+                    }
+                },
+                {
+
+                // Consent gathering failed.
+                })
+            if (consentInformation.canRequestAds()) {
+                initializeMobileAdsSdk(context)
+            }
+        }
+        private fun initializeMobileAdsSdk(context: Context) {
+            if (isMobileAdsInitializeCalled.get()) {
+                return
+            }
+            isMobileAdsInitializeCalled.set(true)
+            // Initialize the Google Mobile Ads SDK.
+            MobileAds.initialize(context)
+        }
     }
 
 }
