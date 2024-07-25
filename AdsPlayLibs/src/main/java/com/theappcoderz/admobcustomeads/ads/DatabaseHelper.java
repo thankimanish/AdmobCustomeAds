@@ -29,8 +29,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + C2_M + " TEXT,"
                 + C3_M + " TEXT" + ")";
         db.execSQL(CREATE_MESSAGE_TABLE);
-
-
     }
 
     @Override
@@ -67,16 +65,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 db.close();
             }
         }
-
     }
-
 
     public boolean isDeleted(String id) {
         SQLiteDatabase db = this.getReadableDatabase();
         boolean isDeleted;
         try {
             String query = "SELECT  * FROM " + TABLE_RECORD + " WHERE urlid='" + id + "'";
-            @SuppressLint("Recycle") Cursor cursor = db.rawQuery(query, null);
+            Cursor cursor = db.rawQuery(query, null);
             cursor.moveToFirst();
             isDeleted = cursor.getCount() > 0;
         } finally {

@@ -13,10 +13,12 @@ import retrofit2.Response
 
 
 class ApiCallAdsConfig(val apilistner: OnCallApiResponce, val con: Context) {
-    private var apiServices: ApiInterface = APIClientAppInfo.client.create(ApiInterface::class.java)
-    private var apiServiceslink: ApiInterface = APIClientAppInfo.clientlink.create(ApiInterface::class.java)
-    var version: String = ""
+
+
+
     fun appInfoAdsData() {
+        var apiServices: ApiInterface = APIClientAppInfo.client.create(ApiInterface::class.java)
+        var version: String = ""
         try {
             val pInfo = con.packageManager.getPackageInfo(con.packageName, 0)
             version = pInfo.versionName
@@ -59,6 +61,8 @@ class ApiCallAdsConfig(val apilistner: OnCallApiResponce, val con: Context) {
         })
     }
     fun appInfoAdsLinksData() {
+        var apiServiceslink: ApiInterface = APIClientAppInfo.clientlink.create(ApiInterface::class.java)
+        var version: String = ""
         try {
             val pInfo = con.packageManager.getPackageInfo(con.packageName, 0)
             version = pInfo.versionName
@@ -66,7 +70,7 @@ class ApiCallAdsConfig(val apilistner: OnCallApiResponce, val con: Context) {
             e.printStackTrace()
         }
         var call = apiServiceslink.getListByCategory("link_master", con.packageName, version,AppConstant.CAT_ID)
-        //println(call.request().url)
+        println(call.request().url)
         call.enqueue(object : Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {
                 //Toast.makeText()

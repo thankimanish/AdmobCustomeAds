@@ -17,13 +17,18 @@ object ApiUtils {
         }
     }
 
-    private fun getdomainlist(jsonArray: JSONArray): String {
-        val domainsAsString = StringBuilder()
-        for (i in 0 until jsonArray.length()) {
-            val domain = jsonArray.getString(i)
-            domainsAsString.append("$domain\n")
+    private fun getdomainlist(js: JSONObject): String {
+        return if (js.has("domain_list")) {
+            val jsonArray: JSONArray = js.getJSONArray("domain_list")
+            val domainsAsString = StringBuilder()
+            for (i in 0 until jsonArray.length()) {
+                val domain = jsonArray.getString(i)
+                domainsAsString.append("$domain\n")
+            }
+            domainsAsString.toString()
+        } else {
+            ""
         }
-        return domainsAsString.toString()
     }
 
     private fun getintmulti(pos: Int, sid: String): String {
@@ -38,15 +43,16 @@ object ApiUtils {
             return sid
         }
     }
-    fun getpackagesorappinfo(js:JSONObject):JSONObject {
+
+    fun getpackagesorappinfo(js: JSONObject): JSONObject {
         return if (js.has("appinfo")) {
             js.getJSONObject("appinfo")
         } else {
             js.getJSONObject("packages")
         }
     }
-    fun getParsingAdsInformation(js: JSONObject) {
 
+    fun getParsingAdsInformation(js: JSONObject) {
         AdsApplication.packages = Adp(
             adType(js.getString("first_ad_type"), js.getString("second_ad_type")),
             js.getString("package_name"),
@@ -130,7 +136,7 @@ object ApiUtils {
             getisopt(js).toInt(),
             mangetnativeads(js).toInt(),
             manageexitads(js).toInt(),
-            getdomainlist(js.getJSONArray("domain_list"))
+            getdomainlist(js)
         )
     }
 
@@ -161,6 +167,7 @@ object ApiUtils {
             e.printStackTrace()
         }
     }
+
     private fun ConvertIntoNumeric(xVal: String): Int {
         return try {
             xVal.toInt()
@@ -169,21 +176,23 @@ object ApiUtils {
         }
     }
 
-    private fun getisopt(js:JSONObject):String {
+    private fun getisopt(js: JSONObject): String {
         return if (js.isNull("openad_load_as_inter")) {
             "0"
         } else {
             js.optString("openad_load_as_inter").toString()
         }
     }
-    private fun mangetnativeads(js:JSONObject):String {
+
+    private fun mangetnativeads(js: JSONObject): String {
         return if (js.isNull("manage_native")) {
             "0"
         } else {
             js.optString("manage_native").toString()
         }
     }
-    private fun manageexitads(js:JSONObject):String {
+
+    private fun manageexitads(js: JSONObject): String {
         return if (js.isNull("manage_exit_ads")) {
             "0"
         } else {
