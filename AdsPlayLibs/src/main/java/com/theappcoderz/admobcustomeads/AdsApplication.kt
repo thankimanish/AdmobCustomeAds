@@ -40,11 +40,12 @@ import com.theappcoderz.admobcustomeads.ads.Link
 import org.json.JSONObject
 import java.util.concurrent.atomic.AtomicBoolean
 
-open class AdsApplication(private val applicationId: String) : MultiDexApplication(),
+open class AdsApplication(private val applicationId: String, private val catid:String) : MultiDexApplication(),
     Application.ActivityLifecycleCallbacks,
     DefaultLifecycleObserver {
     private lateinit var appOpenAdManager: AppOpenAdManager
     private var currentActivity: Activity? = null
+
     override fun onCreate() {
         super<MultiDexApplication>.onCreate()
         registerActivityLifecycleCallbacks(this)
@@ -52,7 +53,9 @@ open class AdsApplication(private val applicationId: String) : MultiDexApplicati
 
         AndroidThreeTen.init(applicationContext)
         instance = this
+        AppConstant.CAT_ID = catid
         prefs = Prefs(this, applicationId)
+        db = DatabaseHelper(applicationContext)
         if (prefs!!.contains(AppConstant.JSONRESPONSE)) {
             try {
                 val jo = JSONObject(prefs!!.getString(AppConstant.JSONRESPONSE, "").toString())
@@ -167,7 +170,7 @@ open class AdsApplication(private val applicationId: String) : MultiDexApplicati
 
         var prefs: Prefs? = null
         var packages = Adp.createDefault()
-        var db = DatabaseHelper(getInstance())
+        var db: DatabaseHelper? = null
 
         var mProgressDialog: DelayedProgressDialog? =
             DelayedProgressDialog()
@@ -380,7 +383,7 @@ open class AdsApplication(private val applicationId: String) : MultiDexApplicati
                 },
                 {
 
-                // Consent gathering failed.
+                    // Consent gathering failed.
                 })
             if (consentInformation.canRequestAds()) {
                 initializeMobileAdsSdk(context)

@@ -7,7 +7,7 @@ class AppConstant {
         var ADCOUNTER = "adcounter"
         var JSONRESPONSE = "jsonresponse"
         var COUNTER_TIME = 4L
-        var CAT_ID = "2"
+        var CAT_ID = ""
     }
 }
 

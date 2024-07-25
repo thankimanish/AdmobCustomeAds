@@ -147,20 +147,24 @@ object ApiUtils {
                 val link = jo.getJSONArray("link" + AppConstant.CAT_ID)
                 for (i in 0 until link.length()) {
                     val datajs = link.getJSONObject(i)
-                    val linkss = Link(
-                        datajs.optString("id"),
-                        datajs.optString("title"),
-                        datajs.optString("url"),
-                        generateLink(datajs.optString("token")),
-                        datajs.optString("name"),
-                        datajs.optString("description"),
-                        ConvertIntoNumeric(datajs.optString("promo")),
-                        datajs.optString("create"),
-                        datajs.optString("post_url"),
-                        AdsApplication.db.isDeleted(datajs.getString("id")),
-                        datajs.optString("token")
-                    )
-                    AdsApplication.link1.add(linkss)
+                    val linkss = AdsApplication.db?.let {
+                        Link(
+                            datajs.optString("id"),
+                            datajs.optString("title"),
+                            datajs.optString("url"),
+                            generateLink(datajs.optString("token")),
+                            datajs.optString("name"),
+                            datajs.optString("description"),
+                            ConvertIntoNumeric(datajs.optString("promo")),
+                            datajs.optString("create"),
+                            datajs.optString("post_url"),
+                            it.isDeleted(datajs.getString("id")),
+                            datajs.optString("token")
+                        )
+                    }
+                    if (linkss != null) {
+                        AdsApplication.link1.add(linkss)
+                    }
                 }
             }
         } catch (e: java.lang.Exception) {
