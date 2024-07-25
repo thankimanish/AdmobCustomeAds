@@ -6,14 +6,14 @@ import org.json.JSONObject
 
 object ApiUtils {
     private fun adType(ftype: String, stype: String): Int {
-        if (ftype.equals("0") && stype.equals("0")) {
-            return 0
-        } else if (ftype.equals("0") && !stype.equals("0")) {
-            return stype.toInt()
-        } else if (stype.equals("0") && !ftype.equals("0")) {
-            return ftype.toInt()
+        return if (ftype == "0" && stype == "0") {
+            0
+        } else if (ftype == "0") {
+            stype.toInt()
+        } else if (stype == "0") {
+            ftype.toInt()
         } else {
-            return (ftype + stype).toInt()
+            (ftype + stype).toInt()
         }
     }
 
@@ -29,10 +29,10 @@ object ApiUtils {
     private fun getintmulti(pos: Int, sid: String): String {
         if (sid.contains(",")) {
             val strs = sid.split(",").toTypedArray()
-            if (strs.size > pos) {
-                return strs[pos]
+            return if (strs.size > pos) {
+                strs[pos]
             } else {
-                return strs[strs.size - 1]
+                strs[strs.size - 1]
             }
         } else {
             return sid
