@@ -18,6 +18,7 @@ class AppOpenAdManager(val instance: AdsApplication?) {
         instance?.let { GoogleMobileAdsConsentManager.getInstance(it) }
     var appOpenAd: AppOpenAd? = null
     private var isLoadingAd = false
+    private var isOpenFirstTime = true
     var isShowingAd = false
     private var loadTime: Long = 0
 
@@ -62,6 +63,7 @@ class AppOpenAdManager(val instance: AdsApplication?) {
 
 
     fun showAdIfAvailable(activity: Activity) {
+        L.e("")
         showAdIfAvailable(activity, object : AdsApplication.OnShowAdCompleteListener {
             override fun onShowAdComplete() {
             }
@@ -79,20 +81,20 @@ class AppOpenAdManager(val instance: AdsApplication?) {
             return
         }
         if (!isAdAvailable()) {
-            L.e("")
             onShowAdCompleteListener.onShowAdFailed()
             if (googleMobileAdsConsentManager?.canRequestAds == true) {
                 loadAd(activity)
             }
             return
         }
-
+        L.e("")
         appOpenAd!!.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdDismissedFullScreenContent() {
 
                 // Set the reference to null so isAdAvailable() returns false.
                 appOpenAd = null
                 isShowingAd = false
+                isOpenFirstTime = false
 
                 onShowAdCompleteListener.onShowAdComplete()
                 if (googleMobileAdsConsentManager?.canRequestAds == true) {
@@ -126,12 +128,19 @@ class AppOpenAdManager(val instance: AdsApplication?) {
         // Ad references in the app open beta will time out after four hours, but this time limit
         // may change in future beta versions. For details, see:
         // https://support.google.com/admob/answer/9341964?hl=en
-        return appOpenAd != null && wasLoadTimeLessThanNHoursAgo(10000L)
+        return appOpenAd != null && wasLoadTimeLessThanNHoursAgo()
     }
-
-    private fun wasLoadTimeLessThanNHoursAgo(numMilliSecondsPerHour: Long): Boolean {
-        if (loadTime == 0L) {
-            return false
+    /*private fun wasLoadTimeLessThanNHoursAgo(numHours: Long): Boolean {
+        val dateDifference: Long = Date().time - loadTime
+        val numMilliSecondsPerHour: Long = 3600000
+        L.e("$dateDifference::::${numMilliSecondsPerHour * numHours}")
+        L.e("${dateDifference < numMilliSecondsPerHour * numHours}")
+        return dateDifference < numMilliSecondsPerHour * numHours
+    }*/
+    private fun wasLoadTimeLessThanNHoursAgo(): Boolean {
+        var numMilliSecondsPerHour = 10000L
+        if (isOpenFirstTime) {
+            return true
         }
         val dateDifference: Long = Date().time - loadTime
         return dateDifference > numMilliSecondsPerHour
