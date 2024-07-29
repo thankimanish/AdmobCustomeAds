@@ -179,7 +179,7 @@ class InterstitialAdAdapter {
                                         }
 
                                         override fun onAdShowedFullScreenContent() {
-                                            // Called when ad is shown.
+                                            interAdListener.onAdShow(type)
                                         }
                                     }
                                 interstitialAd.show(activity)
