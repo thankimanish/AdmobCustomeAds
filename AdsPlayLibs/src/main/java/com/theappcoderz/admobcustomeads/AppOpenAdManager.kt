@@ -70,6 +70,10 @@ class AppOpenAdManager(val instance: AdsApplication?) {
 
             override fun onShowAdFailed() {
             }
+
+            override fun onAdShowSuccess() {
+
+            }
         })
     }
 
@@ -119,6 +123,7 @@ class AppOpenAdManager(val instance: AdsApplication?) {
             override fun onAdShowedFullScreenContent() {
                 appOpenAd = null
                 isShowingAd = true
+                onShowAdCompleteListener.onAdShowSuccess()
             }
         }
         appOpenAd!!.show(activity)

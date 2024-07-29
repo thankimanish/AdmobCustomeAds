@@ -35,6 +35,9 @@ class MainActivity:AppCompatActivity() {
                             )
                         )
                     }
+
+                    override fun onAdShow(type: String) {
+                    }
                 })
 
         }

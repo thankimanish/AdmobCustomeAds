@@ -134,7 +134,12 @@ class GetSmartAdmobConfiguration(
                                         listener.onFinish(true)
                                     }
                                 }
+
+                                override fun onAdShow(type: String) {
+                                    listener.onAdShowed()
+                                }
                             })
+
                     } else {
                         if (AdsConfiguration.first_opened_enable == 1) {
                             (activity.application as AdsApplication).showAdIfAvailable(activity,
@@ -153,6 +158,10 @@ class GetSmartAdmobConfiguration(
                                             AdsConfiguration.isLoadFirstOpenOrInter = false
                                             listener.onFinish(true)
                                         }
+                                    }
+
+                                    override fun onAdShowSuccess() {
+                                        listener.onAdShowed()
                                     }
                                 })
                         } else {
@@ -183,5 +192,6 @@ class GetSmartAdmobConfiguration(
 
     interface SmartListener {
         fun onFinish(success: Boolean)
+        fun onAdShowed()
     }
 }

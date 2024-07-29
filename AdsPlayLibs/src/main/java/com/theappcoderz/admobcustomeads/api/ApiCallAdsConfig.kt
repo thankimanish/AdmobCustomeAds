@@ -5,17 +5,16 @@ import android.content.pm.PackageManager
 import com.theappcoderz.admobcustomeads.AdsApplication
 import com.theappcoderz.admobcustomeads.ads.ApiUtils
 import com.theappcoderz.admobcustomeads.ads.AppConstant
-import com.theappcoderz.admobcustomeads.ads.L
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 
-class ApiCallAdsConfig(val apilistner: OnCallApiResponce, val con: Context) {
+class ApiCallAdsConfig(val apilistner: OnCallApiResponce, private val con: Context) {
 
 
-    fun appInfoAdsData(methodname:String,cat_id:String,baseurl:String) {
+    fun appInfoAdsData(methodname:String, catId:String, baseurl:String) {
         var apiServiceslink: ApiInterface = APIClientAppInfo.getClient(baseurl).create(ApiInterface::class.java)
         var version: String = ""
         try {
@@ -24,10 +23,10 @@ class ApiCallAdsConfig(val apilistner: OnCallApiResponce, val con: Context) {
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
         }
-        var call = if(cat_id.isEmpty()){
+        var call = if(catId.isEmpty()){
             apiServiceslink.getList(methodname, con.packageName, version)
         }else{
-            apiServiceslink.getListByCategory(methodname, con.packageName, version, cat_id)
+            apiServiceslink.getListByCategory(methodname, con.packageName, version, catId)
         }
 
         println(call.request().url)

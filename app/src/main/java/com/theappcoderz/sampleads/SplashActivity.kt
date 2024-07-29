@@ -27,17 +27,20 @@ class SplashActivity : AppCompatActivity(), OnCallApiResponce {
             }
 
             NetworkUtils.NetworkType.WIFI -> {
-                ApiCallAdsConfig(this@SplashActivity, this@SplashActivity).appInfoAdsData("app_settings_adx","","https://theappcoderz.com/appinfo/")
+                callToApi()
             }
 
             NetworkUtils.NetworkType.CELLULAR -> {
-                ApiCallAdsConfig(this@SplashActivity, this@SplashActivity).appInfoAdsData("app_settings_adx","","https://theappcoderz.com/appinfo/")
+                callToApi()
             }
 
             NetworkUtils.NetworkType.VPN -> {
-                ApiCallAdsConfig(this@SplashActivity, this@SplashActivity).appInfoAdsData("app_settings_adx","","https://theappcoderz.com/appinfo/")
+                callToApi()
             }
         }
+    }
+    private fun callToApi(){
+        ApiCallAdsConfig(this@SplashActivity, this@SplashActivity).appInfoAdsData("link_master","2","http://appmobiztech.in/linkmaster/")
     }
 
     override fun onDestroy() {
@@ -62,6 +65,9 @@ class SplashActivity : AppCompatActivity(), OnCallApiResponce {
                         )
                         finish()
                     }, 0)
+                }
+
+                override fun onAdShowed() {
                 }
             })
     }

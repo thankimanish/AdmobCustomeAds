@@ -141,8 +141,8 @@ open class AdsApplication(private val applicationId: String, private val catid:S
 
     interface OnShowAdCompleteListener {
         fun onShowAdComplete()
-
         fun onShowAdFailed()
+        fun onAdShowSuccess()
     }
 
 
